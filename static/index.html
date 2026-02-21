@@ -2,74 +2,46 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StockLSTM | Analytics Dashboard</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Quantum Terminal | StockLSTM</title>
+    <link rel="stylesheet" href="/static/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
 </head>
 <body>
     <div class="dashboard-container">
         <aside class="sidebar">
-            <div class="logo">Stock<span>LSTM</span></div>
+            <div class="logo">QUANT<span>LSTM</span></div>
             <div class="control-group">
-                <label>Select Asset</label>
+                <label>Market Asset</label>
                 <select id="stockSelector">
                     <option value="AAPL">Apple (AAPL)</option>
-                    <option value="BTC">Bitcoin (BTC)</option>
                     <option value="NVDA">Nvidia (NVDA)</option>
+                    <option value="TSLA">Tesla (TSLA)</option>
+                    <option value="BTC-USD">Bitcoin (BTC)</option>
                 </select>
             </div>
-            <div class="control-group">
-                <label>Technical Toggles</label>
-                <div class="checkbox-item"><input type="checkbox" checked> SMA (20)</div>
-                <div class="checkbox-item"><input type="checkbox"> RSI Overlay</div>
-            </div>
-            <div class="sidebar-status">
-                <span class="status-dot"></span> System Operational
+            <div class="nomenclature">
+                <label>Technical Metrics</label>
+                <div class="nom-row"><span>Volatility (σ)</span> <b id="vol">--</b></div>
+                <div class="nom-row"><span>Support</span> <b id="supp">--</b></div>
+                <div class="nom-row"><span>Resistance</span> <b id="res">--</b></div>
             </div>
         </aside>
 
         <main class="main-content">
             <header class="stats-header">
                 <div class="stat-card">
-                    <span>Current Price</span>
-                    <strong id="currPrice">$0.00</strong>
-                    <div id="currTrend" class="trend">--</div>
+                    <span>Spot Price</span>
+                    <h2 id="currPrice">$0.00</h2>
                 </div>
                 <div class="stat-card highlight">
-                    <div class="badge">AI Forecast</div>
-                    <span>LSTM Prediction</span>
-                    <strong id="predPrice">$0.00</strong>
-                    <div id="predTrend" class="trend">--</div>
-                </div>
-                <div class="stat-card">
-                    <span>Confidence</span>
-                    <strong id="confScore">84.2%</strong>
-                    <div class="progress-mini"><div class="fill" style="width: 84%"></div></div>
+                    <span>LSTM Target</span>
+                    <h2 id="predPrice">$0.00</h2>
                 </div>
             </header>
-
-            <section class="indicators-row">
-                <div class="indicator-pill">
-                    <span class="label">RSI(14)</span>
-                    <span id="rsiVal" class="val">50.0</span>
-                </div>
-                <div class="indicator-pill">
-                    <span class="label">Volatility</span>
-                    <span id="volVal" class="val">Low</span>
-                </div>
-                <div class="indicator-pill">
-                    <span class="label">Market Sentiment</span>
-                    <span class="val" style="color: #38bdf8;">Bullish</span>
-                </div>
-            </section>
-
-            <section class="chart-section">
-                <canvas id="mainChart"></canvas>
-            </section>
+            <div id="chartContainer" class="chart-box"></div>
         </main>
     </div>
-    <script src="script.js"></script>
+    <script src="/static/script.js"></script>
 </body>
 </html>

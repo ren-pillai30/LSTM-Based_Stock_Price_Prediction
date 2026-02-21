@@ -1,8 +1,5 @@
 fastapi
 uvicorn
-jinja2
-python-multipart
-tensorflow
-pandas
-numpy
 yfinance
+numpy
+pandas
