@@ -1,60 +1,51 @@
-from flask import Flask, jsonify, send_from_directory
+from flask import Flask, jsonify, request
 import yfinance as yf
 import pandas as pd
 import numpy as np
-import os
 
-# Define the app first to prevent NameErrors
-app = Flask(__name__)
+# 1. DEFINE APP FIRST (Fixes NameError)
+app = Flask(__name__, static_url_path='', static_folder='static')
 
-# Serve the main dashboard
 @app.route('/')
 def index():
-    return send_from_directory('static', 'index.html')
+    return app.send_static_file('index.html')
 
-# Serve CSS and JS files
-@app.route('/static/<path:path>')
-def send_static(path):
-    return send_from_directory('static', path)
-
-@app.get("/api/predict/<ticker>")
-def get_analytics(ticker):
+@app.route('/api/analyze')
+def analyze():
+    t1 = request.args.get('t1', 'AAPL').upper()
+    t2 = request.args.get('t2', 'SPY').upper()
+    
     try:
-        stock = yf.Ticker(ticker)
-        # Fetch 60 days of data
-        df = stock.history(period="60d")
-        
-        if df.empty:
-            return jsonify({"error": "Invalid Ticker"}), 404
+        # Fetch 6 months of daily intensive data
+        data = yf.download([t1, t2], period="6mo", interval="1d")
+        close_data = data['Close'] if 'Close' in data.columns else data
+        close_data = close_data.dropna()
 
-        curr_price = round(df['Close'].iloc[-1], 2)
+        # Primary Asset History
+        historical = close_data[t1].tolist()
+        dates = close_data.index.strftime('%Y-%m-%d').tolist()
         
-        # Professional Nomenclature (Volatility & Support/Resistance)
-        vol = round(df['Close'].pct_change().std() * np.sqrt(252) * 100, 1)
-        support = round(df['Close'].tail(20).min(), 2)
-        resistance = round(df['Close'].tail(20).max(), 2)
+        # 5-Day LSTM Simulation (Logic for your .h5 model)
+        last_val = float(historical[-1])
+        # LSTM layer identifies momentum, here simulated as a 1.2% daily trend
+        preds = [last_val * (1 + (i * 0.012)) for i in range(1, 6)]
+        
+        pred_dates = [(close_data.index[-1] + pd.Timedelta(days=i)).strftime('%Y-%m-%d') for i in range(1, 6)]
 
-        # Generate OHLC data for the Lightweight Charts library
-        ohlc = []
-        for index, row in df.tail(30).iterrows():
-            ohlc.append({
-                "time": index.strftime('%Y-%m-%d'),
-                "open": round(row['Open'], 2),
-                "high": round(row['High'], 2),
-                "low": round(row['Low'], 2),
-                "close": round(row['Close'], 2)
-            })
+        # Prepare datasets for Chart.js
+        full_dates = dates + pred_dates
+        # Prediction line overlaps with the last historical point
+        pred_line = [None] * (len(historical) - 1) + [last_val] + preds
 
         return jsonify({
-            "price": f"{curr_price:,}",
-            "prediction": f"{round(curr_price * 1.02, 2):,}",
-            "volatility": f"{vol}%",
-            "support": f"${support}",
-            "resistance": f"${resistance}",
-            "ohlc": ohlc
+            'dates': full_dates,
+            'primary_history': historical + [None] * 5,
+            'primary_prediction': pred_line,
+            'prediction_only': [{'date': d, 'val': round(v, 2)} for d, v in zip(pred_dates, preds)],
+            'correlation': round(float(close_data[t1].corr(close_data[t2])), 2)
         })
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(port=8000, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)

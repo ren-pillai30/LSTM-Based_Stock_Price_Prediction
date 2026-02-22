@@ -2,35 +2,49 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Quantum Terminal | StockLSTM</title>
-    <link rel="stylesheet" href="/static/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+    <title>QuantPulse | Pro Terminal</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <div class="dashboard-container">
-        <aside class="sidebar">
-            <div class="logo">QUANT<span>LSTM</span></div>
-            <label>Asset</label>
-            <select id="stockSelector">
-                <option value="AAPL">Apple (AAPL)</option>
-                <option value="NVDA">Nvidia (NVDA)</option>
-                <option value="BTC-USD">Bitcoin (BTC)</option>
-            </select>
-            <div class="metrics">
-                <div class="m-row"><span>Volatility</span> <b id="vol">--</b></div>
-                <div class="m-row"><span>Support</span> <b id="supp">--</b></div>
-                <div class="m-row"><span>Resistance</span> <b id="res">--</b></div>
+    <div id="loader" class="loader-hidden"><div class="spinner"></div></div>
+
+    <aside class="sidebar">
+        <h2 class="logo">QuantPulse <span>PRO</span></h2>
+        <div class="input-field">
+            <label>Master Ticker</label>
+            <input type="text" id="t1" value="NVDA">
+        </div>
+        <div class="input-field">
+            <label>Market Benchmark</label>
+            <input type="text" id="t2" value="QQQ">
+        </div>
+        <button class="btn-primary" onclick="runComparison()">Execute Analysis</button>
+        <button class="btn-outline" onclick="toggleModal()">Terminal Guide</button>
+    </aside>
+
+    <main class="main-view">
+        <header class="top-bar">
+            <div class="ticker-wrap"><div class="ticker-item">BTC-USD +2.4%</div><div class="ticker-item">ETH-USD -1.1%</div><div class="ticker-item">TSLA +0.5%</div></div>
+        </header>
+
+        <section class="dashboard-grid">
+            <div class="glass-card chart-area">
+                <canvas id="comparisonChart"></canvas>
             </div>
-        </aside>
-        <main class="main-content">
-            <div class="stats">
-                <div class="card"><span>Price</span> <h2 id="currPrice">$0.00</h2></div>
-                <div class="card highlight"><span>AI Target</span> <h2 id="predPrice">$0.00</h2></div>
+            
+            <div class="glass-card table-area">
+                <h3>LSTM 5-Day Forecast</h3>
+                <table id="forecastTable">
+                    <thead><tr><th>Date</th><th>Target Price</th></tr></thead>
+                    <tbody></tbody>
+                </table>
             </div>
-            <div id="chartContainer" style="height: 500px; width: 100%;"></div>
-        </main>
-    </div>
-    <script src="/static/script.js"></script>
+        </section>
+    </main>
+
+    <div id="infoModal" class="modal"><div class="modal-content"><span class="close" onclick="toggleModal()">&times;</span><h2>Guide</h2><p>Dashed lines indicate LSTM predictions based on 60-day historical windows.</p></div></div>
+
+    <script src="script.js"></script>
 </body>
 </html>

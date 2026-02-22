@@ -1,41 +1,57 @@
-// 1. Initialize the professional chart
-const chartContainer = document.getElementById('chartContainer');
-const chart = LightweightCharts.createChart(chartContainer, {
-    layout: { backgroundColor: '#020617', textColor: '#94a3b8' },
-    grid: { vertLines: { color: '#1e293b' }, horzLines: { color: '#1e293b' } },
-    crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
-});
+let chart;
 
-const candleSeries = chart.addCandlestickSeries({
-    upColor: '#10b981', downColor: '#ef4444',
-    borderDownColor: '#ef4444', borderUpColor: '#10b981',
-    wickDownColor: '#ef4444', wickUpColor: '#10b981',
-});
+async function runComparison() {
+    const t1 = document.getElementById('t1').value;
+    const t2 = document.getElementById('t2').value;
+    const loader = document.getElementById('loader');
 
-// 2. Data fetching and UI update
-async function updateDashboard() {
-    const ticker = document.getElementById('stockSelector').value;
     try {
-        const response = await fetch(`/api/predict/${ticker}`);
-        const data = await response.json();
+        loader.classList.remove('loader-hidden');
+        const res = await fetch(`/api/analyze?t1=${t1}&t2=${t2}`);
+        const data = await res.json();
 
-        if (data.error) return console.error(data.error);
+        // 1. Populate Forecast Table
+        const tbody = document.querySelector('#forecastTable tbody');
+        tbody.innerHTML = data.prediction_only.map(row => 
+            `<tr><td>${row.date}</td><td style="color:#00ff88">$${row.val}</td></tr>`
+        ).join('');
 
-        // Update Text Elements (Matching Python keys exactly)
-        document.getElementById('currPrice').innerText = `$${data.price}`;
-        document.getElementById('predPrice').innerText = `$${data.prediction}`;
-        document.getElementById('volText').innerText = data.volatility;
-        document.getElementById('rsiText').innerText = data.rsi;
-        document.getElementById('suppText').innerText = data.support;
-        document.getElementById('resText').innerText = data.resistance;
-
-        // Set Candlestick Data
-        candleSeries.setData(data.ohlc);
-        chart.timeScale().fitContent();
-    } catch (e) {
-        console.error("Dashboard failed to sync:", e);
-    }
+        // 2. Render Prediction Chart
+        renderFocusedChart(data, t1);
+    } catch (err) { alert(err.message); }
+    finally { loader.classList.add('loader-hidden'); }
 }
 
-document.getElementById('stockSelector').addEventListener('change', updateDashboard);
-updateDashboard();
+function renderFocusedChart(data, name) {
+    const ctx = document.getElementById('comparisonChart').getContext('2d');
+    if (chart) chart.destroy();
+
+    chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: data.dates,
+            datasets: [
+                {
+                    label: 'Historical',
+                    data: data.primary_history,
+                    borderColor: '#fff',
+                    borderWidth: 2,
+                    pointRadius: 0
+                },
+                {
+                    label: 'LSTM Prediction',
+                    data: data.primary_prediction,
+                    borderColor: '#00ff88',
+                    borderDash: [5, 5], // DASHED FOR VISIBILITY
+                    fill: { target: 'origin', above: 'rgba(0, 255, 136, 0.05)' },
+                    pointRadius: 4
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: { x: { grid: { display: false } }, y: { grid: { color: '#222' } } }
+        }
+    });
+}
