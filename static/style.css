@@ -28,9 +28,8 @@ body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color
 .stat-card h2 { margin: 0.5rem 0 0; font-size: 2rem; }
 
 .chart-box { 
-    height: 500px; 
-    background: var(--card); 
-    border-radius: 16px; 
-    border: 1px solid #1e293b;
-    overflow: hidden;
+    height: 500px; /* Essential: The chart won't render in a 0px height box */
+    width: 100%;
+    background: #0f172a;
+    border-radius: 12px;
 }
