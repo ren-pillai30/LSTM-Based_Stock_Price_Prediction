@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>StockLSTM | Quantum Terminal</title>
+    <title>Quantum Terminal | StockLSTM</title>
     <link rel="stylesheet" href="/static/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
@@ -11,45 +11,24 @@
     <div class="dashboard-container">
         <aside class="sidebar">
             <div class="logo">QUANT<span>LSTM</span></div>
-            <div class="section">
-                <label>Market Asset</label>
-                <select id="stockSelector">
-                    <option value="AAPL">Apple (AAPL)</option>
-                    <option value="NVDA">Nvidia (NVDA)</option>
-                    <option value="TSLA">Tesla (TSLA)</option>
-                    <option value="BTC-USD">Bitcoin (BTC)</option>
-                </select>
-            </div>
-            
-            <div class="nomenclature">
-                <label>Technical Mechanics</label>
-                <div class="nom-row"><span>Volatility (σ)</span> <b id="volText">--</b></div>
-                <div class="nom-row"><span>RSI (14)</span> <b id="rsiText">--</b></div>
-                <div class="nom-row"><span>Support</span> <b id="suppText">--</b></div>
-                <div class="nom-row"><span>Resistance</span> <b id="resText">--</b></div>
-            </div>
-
-            <div class="section model-info">
-                <label>Model Architecture</label>
-                <p>Type: Multivariate LSTM</p>
-                <p>Sequence: 60-Day Lookback</p>
-                <p>Confidence: <span id="confVal">92.4%</span></p>
+            <label>Asset</label>
+            <select id="stockSelector">
+                <option value="AAPL">Apple (AAPL)</option>
+                <option value="NVDA">Nvidia (NVDA)</option>
+                <option value="BTC-USD">Bitcoin (BTC)</option>
+            </select>
+            <div class="metrics">
+                <div class="m-row"><span>Volatility</span> <b id="vol">--</b></div>
+                <div class="m-row"><span>Support</span> <b id="supp">--</b></div>
+                <div class="m-row"><span>Resistance</span> <b id="res">--</b></div>
             </div>
         </aside>
-
         <main class="main-content">
-            <header class="stats-header">
-                <div class="stat-card">
-                    <span>Spot Price</span>
-                    <h2 id="currPrice">$0.00</h2>
-                </div>
-                <div class="stat-card highlight">
-                    <span>LSTM Target (24h)</span>
-                    <h2 id="predPrice">$0.00</h2>
-                </div>
-            </header>
-
-            <div id="chartContainer" class="chart-box"></div>
+            <div class="stats">
+                <div class="card"><span>Price</span> <h2 id="currPrice">$0.00</h2></div>
+                <div class="card highlight"><span>AI Target</span> <h2 id="predPrice">$0.00</h2></div>
+            </div>
+            <div id="chartContainer" style="height: 500px; width: 100%;"></div>
         </main>
     </div>
     <script src="/static/script.js"></script>
