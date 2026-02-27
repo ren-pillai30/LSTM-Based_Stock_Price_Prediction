@@ -2,49 +2,55 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>QuantPulse | Pro Terminal</title>
+    <title>QuantPulse Stock Prediction</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1"></script>
 </head>
 <body>
-    <div id="loader" class="loader-hidden"><div class="spinner"></div></div>
-
-    <aside class="sidebar">
-        <h2 class="logo">QuantPulse <span>PRO</span></h2>
-        <div class="input-field">
-            <label>Master Ticker</label>
-            <input type="text" id="t1" value="NVDA">
+    <div class="ticker-wrap">
+        <div class="ticker" id="price-ticker">
+            <span>Dashboard Ready. Click Execute Analysis to Start Ticker Feed</span>
         </div>
-        <div class="input-field">
-            <label>Market Benchmark</label>
-            <input type="text" id="t2" value="QQQ">
-        </div>
-        <button class="btn-primary" onclick="runComparison()">Execute Analysis</button>
-        <button class="btn-outline" onclick="toggleModal()">Terminal Guide</button>
-    </aside>
+    </div>
 
-    <main class="main-view">
-        <header class="top-bar">
-            <div class="ticker-wrap"><div class="ticker-item">BTC-USD +2.4%</div><div class="ticker-item">ETH-USD -1.1%</div><div class="ticker-item">TSLA +0.5%</div></div>
-        </header>
+    <div class="intel-trigger" onclick="toggleIntelligence()">
+        <i class="fas fa-brain"></i>
+    </div>
 
-        <section class="dashboard-grid">
-            <div class="glass-card chart-area">
-                <canvas id="comparisonChart"></canvas>
+    <div class="pro-grid-focused">
+        <aside class="side-panel glass">
+            <h2 class="brand">QuantPulse <span>PRO</span></h2>
+            <div class="input-set">
+                <input type="text" id="t1" value="NVDA" placeholder="Primary Ticker">
+                <input type="text" id="t2" value="SPY" placeholder="Benchmark">
+                <button class="cybe-btn" onclick="analyzeMarket()">EXECUTE ANALYSIS</button>
             </div>
-            
-            <div class="glass-card table-area">
-                <h3>LSTM 5-Day Forecast</h3>
-                <table id="forecastTable">
-                    <thead><tr><th>Date</th><th>Target Price</th></tr></thead>
-                    <tbody></tbody>
-                </table>
+            <div class="stat-card">
+                <label>System Sentiment</label>
+                <span id="sent-val">--</span>
             </div>
-        </section>
-    </main>
+        </aside>
 
-    <div id="infoModal" class="modal"><div class="modal-content"><span class="close" onclick="toggleModal()">&times;</span><h2>Guide</h2><p>Dashed lines indicate LSTM predictions based on 60-day historical windows.</p></div></div>
+        <main class="main-stage">
+            <div class="chart-wrap glass"><canvas id="proChart"></canvas></div>
+        </main>
 
+        <aside id="intel-drawer" class="intel-panel glass drawer-closed">
+            <div class="drawer-header">
+                <h3>Market Intelligence</h3>
+                <span class="close-btn" onclick="toggleIntelligence()">&times;</span>
+            </div>
+            <div class="meter-box">
+                <label>Sentiment Intensity</label>
+                <div class="meter-bg"><div id="sentiment-fill" class="meter-fill"></div></div>
+                <div class="meter-labels"><span>Bearish</span><span>Bullish</span></div>
+            </div>
+            <div id="news-feed" class="news-container"></div>
+        </aside>
+    </div>
     <script src="script.js"></script>
 </body>
 </html>

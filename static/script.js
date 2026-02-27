@@ -1,57 +1,58 @@
-let chart;
+let proChart;
 
-async function runComparison() {
-    const t1 = document.getElementById('t1').value;
-    const t2 = document.getElementById('t2').value;
-    const loader = document.getElementById('loader');
-
-    try {
-        loader.classList.remove('loader-hidden');
-        const res = await fetch(`/api/analyze?t1=${t1}&t2=${t2}`);
-        const data = await res.json();
-
-        // 1. Populate Forecast Table
-        const tbody = document.querySelector('#forecastTable tbody');
-        tbody.innerHTML = data.prediction_only.map(row => 
-            `<tr><td>${row.date}</td><td style="color:#00ff88">$${row.val}</td></tr>`
-        ).join('');
-
-        // 2. Render Prediction Chart
-        renderFocusedChart(data, t1);
-    } catch (err) { alert(err.message); }
-    finally { loader.classList.add('loader-hidden'); }
+function toggleIntelligence() {
+    const drawer = document.getElementById('intel-drawer');
+    drawer.classList.toggle('drawer-closed');
 }
 
-function renderFocusedChart(data, name) {
-    const ctx = document.getElementById('comparisonChart').getContext('2d');
-    if (chart) chart.destroy();
+function openNewsLink(url) {
+    if (!url || url === '#') return;
+    window.open(url, '_blank', 'noopener,noreferrer');
+}
 
-    chart = new Chart(ctx, {
+async function analyzeMarket() {
+    const t1 = document.getElementById('t1').value;
+    const t2 = document.getElementById('t2').value;
+
+    try {
+        const res = await fetch(`/api/analyze?t1=${t1}&t2=${t2}`);
+        const data = await res.json();
+        if (data.error) throw new Error(data.error);
+        
+        const ticker = document.getElementById('price-ticker');
+        ticker.innerHTML = `<span>${data.ticker.symbol} PRESENT: $${data.ticker.current}</span><span>${data.ticker.symbol} 5D TARGET: $${data.ticker.predicted}</span><span>SENTIMENT: ${data.indicators.sentiment}</span>`.repeat(5);
+
+        const score = data.indicators.sentiment;
+        document.getElementById('sent-val').innerText = score;
+        document.getElementById('sentiment-fill').style.width = `${((score + 1) / 2) * 100}%`;
+
+        const container = document.getElementById('news-feed');
+        container.innerHTML = data.news.map(n => `
+            <div class="news-item" style="padding:15px 0; border-bottom:1px solid #222; cursor:pointer;" onclick="openNewsLink('${n.link}')">
+                <strong style="color:var(--accent);">${n.title}</strong><br><small style="color:#666;">Source: ${n.pub}</small>
+            </div>
+        `).join('');
+
+        renderChart(data, t1, t2);
+    } catch (err) { alert(err.message); }
+}
+
+function renderChart(data, n1, n2) {
+    const ctx = document.getElementById('proChart').getContext('2d');
+    if (proChart) proChart.destroy();
+    proChart = new Chart(ctx, {
         type: 'line',
         data: {
             labels: data.dates,
             datasets: [
-                {
-                    label: 'Historical',
-                    data: data.primary_history,
-                    borderColor: '#fff',
-                    borderWidth: 2,
-                    pointRadius: 0
-                },
-                {
-                    label: 'LSTM Prediction',
-                    data: data.primary_prediction,
-                    borderColor: '#00ff88',
-                    borderDash: [5, 5], // DASHED FOR VISIBILITY
-                    fill: { target: 'origin', above: 'rgba(0, 255, 136, 0.05)' },
-                    pointRadius: 4
-                }
+                { label: n1 + ' History', data: data.t1_history, borderColor: '#00ff88', pointRadius: 0 },
+                { label: n1 + ' Forecast', data: data.t1_predict, borderColor: '#00ff88', borderDash: [5, 5], fill: {target: 'origin', above: 'rgba(0, 255, 136, 0.1)'} },
+                { label: n2 + ' Comparison', data: data.t2_compare, borderColor: 'rgba(255,255,255,0.3)', pointRadius: 0 }
             ]
         },
         options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: { x: { grid: { display: false } }, y: { grid: { color: '#222' } } }
+            responsive: true, maintainAspectRatio: false,
+            plugins: { zoom: { zoom: { wheel: { enabled: true }, mode: 'x' }, pan: { enabled: true, mode: 'x' } } }
         }
     });
 }
