@@ -1,0 +1,234 @@
+symbol,name
+AAPL,Apple Inc.
+MSFT,Microsoft Corporation
+GOOGL,Alphabet Inc. Class A
+GOOG,Alphabet Inc. Class C
+AMZN,Amazon.com Inc.
+NVDA,NVIDIA Corporation
+META,Meta Platforms Inc.
+TSLA,Tesla Inc.
+BRK.B,Berkshire Hathaway Inc. Class B
+BRK.A,Berkshire Hathaway Inc. Class A
+JPM,JPMorgan Chase & Co.
+V,Visa Inc.
+UNH,UnitedHealth Group Inc.
+XOM,Exxon Mobil Corporation
+JNJ,Johnson & Johnson
+WMT,Walmart Inc.
+MA,Mastercard Inc.
+PG,Procter & Gamble Co.
+HD,Home Depot Inc.
+CVX,Chevron Corporation
+LLY,Eli Lilly and Company
+ABBV,AbbVie Inc.
+MRK,Merck & Co. Inc.
+PEP,PepsiCo Inc.
+KO,Coca-Cola Company
+BAC,Bank of America Corp.
+PFE,Pfizer Inc.
+TMO,Thermo Fisher Scientific Inc.
+AVGO,Broadcom Inc.
+COST,Costco Wholesale Corporation
+DIS,Walt Disney Co.
+CSCO,Cisco Systems Inc.
+DHR,Danaher Corporation
+VZ,Verizon Communications Inc.
+WFC,Wells Fargo & Company
+TXN,Texas Instruments Inc.
+ACN,Accenture PLC
+NEE,NextEra Energy Inc.
+UPS,United Parcel Service Inc.
+RTX,Raytheon Technologies Corporation
+HON,Honeywell International Inc.
+PM,Philip Morris International Inc.
+T,AT&T Inc.
+QCOM,Qualcomm Inc.
+IBM,International Business Machines Corp.
+SPGI,S&P Global Inc.
+AMD,Advanced Micro Devices Inc.
+INTU,Intuit Inc.
+MS,Morgan Stanley
+CAT,Caterpillar Inc.
+BA,Boeing Company
+GE,General Electric Company
+LOW,Lowe's Companies Inc.
+AMGN,Amgen Inc.
+DE,Deere & Company
+GS,Goldman Sachs Group Inc.
+SBUX,Starbucks Corporation
+AXP,American Express Company
+MO,Altria Group Inc.
+GILD,Gilead Sciences Inc.
+MDLZ,Mondelez International Inc.
+ADI,Analog Devices Inc.
+TJX,TJX Companies Inc.
+ISRG,Intuitive Surgical Inc.
+ADP,Automatic Data Processing Inc.
+MMM,3M Company
+BLK,BlackRock Inc.
+BKNG,Booking Holdings Inc.
+ZTS,Zoetis Inc.
+REGN,Regeneron Pharmaceuticals Inc.
+MU,Micron Technology Inc.
+VRTX,Vertex Pharmaceuticals Inc.
+PANW,Palo Alto Networks Inc.
+LRCX,Lam Research Corporation
+TMUS,T-Mobile US Inc.
+CI,Cigna Group
+ELV,Elevance Health Inc.
+SLB,Schlumberger Limited
+C,Citigroup Inc.
+HCA,HCA Healthcare Inc.
+PLD,Prologis Inc.
+ITW,Illinois Tool Works Inc.
+CB,Chubb Limited
+CME,CME Group Inc.
+USB,U.S. Bancorp
+PNC,PNC Financial Services Group Inc.
+EOG,EOG Resources Inc.
+KLAC,KLA Corporation
+MAR,Marriott International Inc.
+MCD,McDonald's Corporation
+SNOW,Snowflake Inc.
+UBER,Uber Technologies Inc.
+LYFT,Lyft Inc.
+SHOP,Shopify Inc.
+SPOT,Spotify Technology S.A.
+ROKU,Roku Inc.
+PLTR,Palantir Technologies Inc.
+CRWD,CrowdStrike Holdings Inc.
+ZM,Zoom Video Communications Inc.
+DOCU,DocuSign Inc.
+TWLO,Twilio Inc.
+DDOG,Datadog Inc.
+NET,Cloudflare Inc.
+OKTA,Okta Inc.
+ZS,Zscaler Inc.
+COIN,Coinbase Global Inc.
+MSTR,MicroStrategy Inc.
+SQ,Block Inc.
+PYPL,PayPal Holdings Inc.
+ABNB,Airbnb Inc.
+DASH,DoorDash Inc.
+RBLX,Roblox Corporation
+U,Unity Software Inc.
+RIVN,Rivian Automotive Inc.
+LCID,Lucid Group Inc.
+NIO,NIO Inc.
+XPEV,XPeng Inc.
+LI,Li Auto Inc.
+BIDU,Baidu Inc.
+JD,JD.com Inc.
+PDD,PDD Holdings Inc.
+BABA,Alibaba Group Holding Limited
+TCEHY,Tencent Holdings Limited
+TSM,Taiwan Semiconductor Manufacturing Co.
+ASML,ASML Holding N.V.
+SAP,SAP SE
+TM,Toyota Motor Corporation
+NVO,Novo Nordisk A/S
+SHEL,Shell PLC
+RY,Royal Bank of Canada
+TD,Toronto-Dominion Bank
+BHP,BHP Group Limited
+RIO,Rio Tinto PLC
+SPY,SPDR S&P 500 ETF Trust
+QQQ,Invesco QQQ Trust
+DIA,SPDR Dow Jones Industrial Average ETF
+IWM,iShares Russell 2000 ETF
+VTI,Vanguard Total Stock Market ETF
+VOO,Vanguard S&P 500 ETF
+GLD,SPDR Gold Shares
+SLV,iShares Silver Trust
+TLT,iShares 20+ Year Treasury Bond ETF
+HYG,iShares iBoxx $ High Yield Corporate Bond ETF
+EEM,iShares MSCI Emerging Markets ETF
+EFA,iShares MSCI EAFE ETF
+XLF,Financial Select Sector SPDR Fund
+XLK,Technology Select Sector SPDR Fund
+XLE,Energy Select Sector SPDR Fund
+XLV,Health Care Select Sector SPDR Fund
+XLI,Industrial Select Sector SPDR Fund
+XLY,Consumer Discretionary Select Sector SPDR Fund
+XLP,Consumer Staples Select Sector SPDR Fund
+XLU,Utilities Select Sector SPDR Fund
+ARKK,ARK Innovation ETF
+ARKG,ARK Genomic Revolution ETF
+ARKW,ARK Next Generation Internet ETF
+ARKF,ARK Fintech Innovation ETF
+GME,GameStop Corp.
+AMC,AMC Entertainment Holdings Inc.
+BB,BlackBerry Limited
+NOK,Nokia Corporation
+F,Ford Motor Company
+GM,General Motors Company
+STLA,Stellantis N.V.
+ON,ON Semiconductor Corporation
+INTC,Intel Corporation
+ARM,Arm Holdings PLC
+SMCI,Super Micro Computer Inc.
+HPQ,HP Inc.
+DELL,Dell Technologies Inc.
+HPE,Hewlett Packard Enterprise Co.
+ORCL,Oracle Corporation
+CRM,Salesforce Inc.
+NOW,ServiceNow Inc.
+WDAY,Workday Inc.
+ADSK,Autodesk Inc.
+SNPS,Synopsys Inc.
+CDNS,Cadence Design Systems Inc.
+FTNT,Fortinet Inc.
+CSGP,CoStar Group Inc.
+TTD,Trade Desk Inc.
+RGEN,Repligen Corporation
+SGEN,Seagen Inc.
+BIIB,Biogen Inc.
+BMRN,BioMarin Pharmaceutical Inc.
+ALNY,Alnylam Pharmaceuticals Inc.
+MRNA,Moderna Inc.
+BNTX,BioNTech SE
+NVAX,Novavax Inc.
+TDOC,Teladoc Health Inc.
+HIMS,Hims & Hers Health Inc.
+GH,Guardant Health Inc.
+EXAS,Exact Sciences Corporation
+ILMN,Illumina Inc.
+PACB,Pacific Biosciences of California Inc.
+TWST,Twist Bioscience Corporation
+DLR,Digital Realty Trust Inc.
+EQIX,Equinox Inc.
+AMT,American Tower Corporation
+CCI,Crown Castle Inc.
+SBAC,SBA Communications Corporation
+PSA,Public Storage
+AVB,AvalonBay Communities Inc.
+O,Realty Income Corporation
+WPC,W. P. Carey Inc.
+VICI,VICI Properties Inc.
+ARE,Alexandria Real Estate Equities Inc.
+BXP,Boston Properties Inc.
+SUI,Sun Communities Inc.
+UDR,UDR Inc.
+CPT,Camden Property Trust
+ESS,Essex Property Trust Inc.
+EQR,Equity Residential
+HDFCBANK.NS,HDFC Bank Limited (NSE)
+HDFCBANK.BO,HDFC Bank Limited (BSE)
+SBIN.NS,State Bank of India (NSE)
+SBIN.BO,State Bank of India (BSE)
+RELIANCE.NS,Reliance Industries Limited (NSE)
+RELIANCE.BO,Reliance Industries Limited (BSE)
+TCS.NS,Tata Consultancy Services Limited (NSE)
+TCS.BO,Tata Consultancy Services Limited (BSE)
+INFY.NS,Infosys Limited (NSE)
+INFY.BO,Infosys Limited (BSE)
+ICICIBANK.NS,ICICI Bank Limited (NSE)
+ICICIBANK.BO,ICICI Bank Limited (BSE)
+BHARTIARTL.NS,Bharti Airtel Limited (NSE)
+BHARTIARTL.BO,Bharti Airtel Limited (BSE)
+ITC.NS,ITC Limited (NSE)
+ITC.BO,ITC Limited (BSE)
+HINDUNILVR.NS,Hindustan Unilever Limited (NSE)
+HINDUNILVR.BO,Hindustan Unilever Limited (BSE)
+LT.NS,Larsen & Toubro Limited (NSE)
+LT.BO,Larsen & Toubro Limited (BSE)
