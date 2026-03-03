@@ -1,56 +1,215 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <title>QuantPulse Stock Prediction</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quant — LSTM Stock Prediction</title>
+  <meta name="description"
+    content="AI-powered stock analysis with real LSTM forecasting, candlestick charts, and smart buy/sell recommendations." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <!-- TradingView Lightweight Charts -->
+  <script src="https://unpkg.com/lightweight-charts@4.0.0/dist/lightweight-charts.standalone.production.js"></script>
+  <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
-    <div class="ticker-wrap">
-        <div class="ticker" id="price-ticker">
-            <span>Dashboard Ready. Click Execute Analysis to Start Ticker Feed</span>
+
+  <!-- ══ TOP NAVBAR ══════════════════════════════════════════════════════════ -->
+  <header class="navbar" id="navbar">
+    <div class="nav-left">
+      <span class="logo">Quant</span>
+    </div>
+
+    <div class="nav-center">
+      <div class="search-wrap" id="searchWrap">
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" id="searchInput" class="search-input" placeholder="Search ticker or company…"
+          autocomplete="off" />
+        <div class="search-dropdown" id="searchDropdown"></div>
+      </div>
+    </div>
+
+    <div class="nav-right">
+      <div class="ticker-badge" id="navLiveBadge">
+        <span class="pulse-dot"></span><span id="navSymbol">—</span>
+        <span id="navPrice">—</span>
+      </div>
+      <button class="nav-btn" id="compareToggleBtn" onclick="toggleCompare()">
+        <i class="fas fa-code-compare"></i> Compare
+      </button>
+    </div>
+  </header>
+
+  <!-- ══ MAIN LAYOUT ══════════════════════════════════════════════════════════ -->
+  <div class="app-layout">
+
+    <!-- ── LEFT SIDEBAR ────────────────────────────────────────────────────── -->
+    <aside class="sidebar" id="sidebar">
+
+      <div class="sidebar-section">
+        <h4 class="sidebar-label">Primary</h4>
+        <div class="ticker-display" id="primaryDisplay">
+          <span class="tdisplay-symbol" id="primarySymbol">NVDA</span>
+          <span class="tdisplay-name" id="primaryName">NVIDIA Corporation</span>
         </div>
-    </div>
+        <button id="analyzeBtn" class="btn-primary" onclick="runAnalysis()">
+          <i class="fas fa-bolt"></i> Run Analysis
+        </button>
+      </div>
 
-    <div class="intel-trigger" onclick="toggleIntelligence()">
-        <i class="fas fa-brain"></i>
-    </div>
+      <!-- Compare section (hidden by default) -->
+      <div class="sidebar-section compare-section hidden" id="compareSection">
+        <h4 class="sidebar-label">Benchmark</h4>
+        <div class="search-wrap mini">
+          <i class="fas fa-search search-icon"></i>
+          <input type="text" id="compareInput" class="search-input" placeholder="e.g. SPY" autocomplete="off" />
+          <div class="search-dropdown" id="compareDropdown"></div>
+        </div>
+        <div class="ticker-display" id="compareDisplay" style="display:none">
+          <span class="tdisplay-symbol" id="compareSymbol">SPY</span>
+          <span class="tdisplay-name" id="compareName">S&P 500 ETF</span>
+        </div>
+      </div>
 
-    <div class="pro-grid-focused">
-        <aside class="side-panel glass">
-            <h2 class="brand">QuantPulse <span>PRO</span></h2>
-            <div class="input-set">
-                <input type="text" id="t1" value="NVDA" placeholder="Primary Ticker">
-                <input type="text" id="t2" value="SPY" placeholder="Benchmark">
-                <button class="cybe-btn" onclick="analyzeMarket()">EXECUTE ANALYSIS</button>
-            </div>
-            <div class="stat-card">
-                <label>System Sentiment</label>
-                <span id="sent-val">--</span>
-            </div>
-        </aside>
+      <!-- Period selector -->
+      <div class="sidebar-section">
+        <h4 class="sidebar-label">Period</h4>
+        <div class="period-pills">
+          <button class="pill" data-period="1mo" onclick="setPeriod(this)">1M</button>
+          <button class="pill active" data-period="6mo" onclick="setPeriod(this)">6M</button>
+          <button class="pill" data-period="1y" onclick="setPeriod(this)">1Y</button>
+          <button class="pill" data-period="2y" onclick="setPeriod(this)">2Y</button>
+        </div>
+      </div>
 
-        <main class="main-stage">
-            <div class="chart-wrap glass"><canvas id="proChart"></canvas></div>
-        </main>
+      <!-- Key Stats -->
+      <div class="sidebar-section" id="statsSection" style="display:none">
+        <h4 class="sidebar-label">Key Stats</h4>
+        <div class="stat-row"><span class="stat-k">Current</span><span class="stat-v" id="statCurrent">—</span></div>
+        <div class="stat-row"><span class="stat-k">5D LSTM Target</span><span class="stat-v accent"
+            id="statTarget">—</span></div>
+        <div class="stat-row"><span class="stat-k">RSI (14)</span><span class="stat-v" id="statRSI">—</span></div>
+        <div class="stat-row"><span class="stat-k">MACD</span><span class="stat-v" id="statMACD">—</span></div>
+        <div class="stat-row"><span class="stat-k">News Sentiment</span><span class="stat-v" id="statSentiment">—</span>
+        </div>
+      </div>
 
-        <aside id="intel-drawer" class="intel-panel glass drawer-closed">
-            <div class="drawer-header">
-                <h3>Market Intelligence</h3>
-                <span class="close-btn" onclick="toggleIntelligence()">&times;</span>
+      <!-- Recommendation Badge -->
+      <div class="sidebar-section" id="recSection" style="display:none">
+        <h4 class="sidebar-label">AI Recommendation</h4>
+        <div class="rec-badge-wrap">
+          <div class="rec-badge" id="recBadge">—</div>
+        </div>
+        <div class="rec-score-bar">
+          <span class="rsb-label">Sell</span>
+          <div class="rsb-track">
+            <div class="rsb-fill" id="rscFill"></div>
+            <div class="rsb-thumb" id="rsbThumb"></div>
+          </div>
+          <span class="rsb-label">Buy</span>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- ── CHART STAGE ─────────────────────────────────────────────────────── -->
+    <main class="chart-stage">
+
+      <!-- Chart Toolbar -->
+      <div class="chart-toolbar">
+        <div class="chart-title-wrap">
+          <span class="ct-symbol" id="ctSymbol">—</span>
+          <span class="ct-change" id="ctChange">—</span>
+        </div>
+        <div class="chart-controls">
+          <div class="chart-type-toggle">
+            <button class="ctt-btn active" id="btnCandle" onclick="setChartType('candlestick')">
+              <i class="fas fa-chart-candlestick"></i> Candle
+            </button>
+            <button class="ctt-btn" id="btnLine" onclick="setChartType('line')">
+              <i class="fas fa-chart-line"></i> Line
+            </button>
+          </div>
+          <button class="ctrl-btn" onclick="resetZoom()" title="Reset Zoom">
+            <i class="fas fa-compress-arrows-alt"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Main chart -->
+      <div class="chart-container" id="chartContainer">
+        <!-- TradingView logo removed -->
+        <div class="chart-placeholder" id="chartPlaceholder">
+          <i class="fas fa-chart-line placeholder-icon"></i>
+          <p>Search for a ticker and click <strong>Run Analysis</strong> to begin</p>
+        </div>
+      </div>
+
+      <!-- Loading overlay -->
+      <div class="loading-overlay hidden" id="loadingOverlay">
+        <div class="spinner"></div>
+        <p class="loading-text" id="loadingText">Running LSTM model…</p>
+      </div>
+
+      <!-- ── BOTTOM PANEL ─────────────────────────────────────────────────── -->
+      <div class="bottom-panel" id="bottomPanel" style="display:none">
+        <div class="tab-bar">
+          <button class="tab active" data-tab="ai" onclick="switchTab('ai',this)"><i class="fas fa-brain"></i> AI
+            Analysis</button>
+          <button class="tab" data-tab="news" onclick="switchTab('news',this)"><i class="fas fa-newspaper"></i> News
+            Feed</button>
+          <button class="tab" data-tab="forecast" onclick="switchTab('forecast',this)"><i class="fas fa-chart-bar"></i>
+            LSTM Forecast</button>
+        </div>
+
+        <!-- AI Tab -->
+        <div class="tab-content active" id="tab-ai">
+          <div class="ai-summary-grid">
+            <div class="ai-summary-text">
+              <p id="aiSummaryText">—</p>
             </div>
-            <div class="meter-box">
-                <label>Sentiment Intensity</label>
-                <div class="meter-bg"><div id="sentiment-fill" class="meter-fill"></div></div>
-                <div class="meter-labels"><span>Bearish</span><span>Bullish</span></div>
+            <div class="ai-signals">
+              <div class="signal-item" id="sig-rsi">
+                <span class="sig-label"><i class="fas fa-tachometer-alt"></i> RSI Signal</span>
+                <span class="sig-val" id="sigRSI">—</span>
+              </div>
+              <div class="signal-item" id="sig-macd">
+                <span class="sig-label"><i class="fas fa-arrows-up-down"></i> MACD Signal</span>
+                <span class="sig-val" id="sigMACD">—</span>
+              </div>
+              <div class="signal-item" id="sig-lstm">
+                <span class="sig-label"><i class="fas fa-robot"></i> LSTM Signal</span>
+                <span class="sig-val" id="sigLSTM">—</span>
+              </div>
+              <div class="signal-item" id="sig-sent">
+                <span class="sig-label"><i class="fas fa-newspaper"></i> News Sentiment</span>
+                <span class="sig-val" id="sigSent">—</span>
+              </div>
             </div>
-            <div id="news-feed" class="news-container"></div>
-        </aside>
-    </div>
-    <script src="script.js"></script>
+          </div>
+        </div>
+
+        <!-- News Tab -->
+        <div class="tab-content" id="tab-news">
+          <div class="news-list" id="newsList"></div>
+        </div>
+
+        <!-- Forecast Tab -->
+        <div class="tab-content" id="tab-forecast">
+          <div class="forecast-grid" id="forecastGrid"></div>
+        </div>
+
+      </div><!-- /bottom-panel -->
+
+    </main>
+
+  </div><!-- /app-layout -->
+
+  <script src="script.js"></script>
 </body>
+
 </html>
