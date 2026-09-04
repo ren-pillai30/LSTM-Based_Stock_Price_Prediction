@@ -345,14 +345,15 @@ function renderBottomPanel(ana) {
   const newsList = document.getElementById('newsList');
   newsList.innerHTML = ana.news.map(n => {
     const cls = n.score > 0.05 ? 'pos' : (n.score < -0.05 ? 'neg' : 'neu');
+    const link = getArticleLink(n.link);
     return `
-      <div class="news-card ${cls}" onclick="window.open('${escHtml(n.link)}','_blank','noopener')">
+      <a class="news-card ${cls}" href="${escHtml(link)}" target="_blank" rel="noopener noreferrer">
         <div class="news-title">${escHtml(n.title)}</div>
         <div class="news-meta">
           <span>${escHtml(n.pub)}</span>
           <span class="news-score ${cls}">Sentiment: ${n.score > 0 ? '+' : ''}${n.score}</span>
         </div>
-      </div>`;
+      </a>`;
   }).join('') || '<p style="color:var(--text-muted)">No news available.</p>';
 
   // Forecast tab
@@ -399,4 +400,13 @@ function escHtml(str) {
   return String(str ?? '')
     .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+}
+
+function getArticleLink(link) {
+  try {
+    const url = new URL(link, window.location.origin);
+    return ['http:', 'https:'].includes(url.protocol) ? url.href : '#';
+  } catch {
+    return '#';
+  }
 }

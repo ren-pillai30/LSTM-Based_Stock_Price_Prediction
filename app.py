@@ -103,9 +103,14 @@ def analyze():
         raw_news   = ticker_obj.news[:15] if hasattr(ticker_obj, 'news') else []
         sentiment_scores, news_list = [], []
         for n in raw_news:
-            title = n.get('title', '') or n.get('content', {}).get('title', 'Market Update')
-            pub   = n.get('publisher', '') or n.get('content', {}).get('provider', {}).get('displayName', 'Financial Feed')
-            link  = n.get('link', '#')
+            content = n.get('content', {}) if isinstance(n.get('content', {}), dict) else {}
+            title = n.get('title', '') or content.get('title', 'Market Update')
+            pub   = n.get('publisher', '') or content.get('provider', {}).get('displayName', 'Financial Feed')
+            link  = (n.get('link') or
+                     n.get('clickThroughUrl', {}).get('url') or
+                     n.get('canonicalUrl', {}).get('url') or
+                     content.get('clickThroughUrl', {}).get('url') or
+                     content.get('canonicalUrl', {}).get('url') or '#')
             score = analyzer.polarity_scores(str(title))['compound']
             sentiment_scores.append(score)
             news_list.append({'title': str(title), 'pub': str(pub), 'link': str(link), 'score': round(score,2)})

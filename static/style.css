@@ -405,6 +405,7 @@ html, body {
   background: var(--bg); border: 1px solid var(--border);
   border-radius: var(--radius); padding: 10px 14px;
   cursor: pointer; transition: all var(--trans);
+  display: block; color: inherit; text-decoration: none;
   border-left: 3px solid var(--border);
 }
 .news-card:hover { border-color: var(--accent-green); transform: translateX(2px); }
